@@ -23,7 +23,7 @@ locals {
 }
 
 locals {
-  aws_config_rules = "${path.root}/../../vendor/github.com/awslabs/aws-config-rules"
+  aws_config_rules = "${path.root}/vendor/github.com/awslabs/aws-config-rules"
 }
 
 data "aws_partition" "current" {

@@ -4,7 +4,7 @@ CURL ?= curl --fail -sSL
 XARGS ?= xargs -I {}
 BIN_DIR ?= ${HOME}/bin
 TMP ?= /tmp
-FIND_EXCLUDES ?= -not \( -name .terraform -prune \) -not \( -name .terragrunt-cache -prune \)
+FIND_EXCLUDES ?= -not \( -name .terraform -prune \) -not \( -name .terragrunt-cache -prune \) -not \( -name vendor -prune \)
 
 PATH := $(BIN_DIR):${PATH}
 
@@ -121,3 +121,14 @@ terratest/install: | guard/program/go guard/program/dep
 
 terratest/test: | guard/program/go guard/program/dep
 	cd tests && go test -timeout 20m
+
+clean:
+	rm -rf vendor
+
+VENDOR ?= vendor/github.com/awslabs/aws-config-rules
+vendor: $(VENDOR)
+	echo "root = true" > vendor/.editorconfig
+
+vendor/%:
+	git clone https://$(*).git vendor/$*
+	rm -rf vendor/$*/.git
