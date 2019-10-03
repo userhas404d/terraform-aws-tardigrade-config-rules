@@ -16,7 +16,7 @@ make clean && make vendor
 | config\_bucket | Name of S3 bucket to validate that Config is configured to send inventory to | string | `"null"` | no |
 | config\_recorder | The name of the AWS Config recorder | string | `"null"` | no |
 | config\_sns\_topic\_arn | ARN of SNS topic to validate that Config changes are being streamed to | string | `"null"` | no |
-| create\_config\_rules | Controls whether to create the AWS Config Rules | string | `"true"` | no |
+| create\_config\_rules | Controls whether to create the AWS Config Rules | bool | `"true"` | no |
 | exclude\_rules | List of config rule resource names to exclude from creation | list(string) | `<list>` | no |
 | tags | Map of tags to apply to the resources | map(string) | `<map>` | no |
 
