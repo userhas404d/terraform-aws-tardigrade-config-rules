@@ -1,5 +1,6 @@
 variable "create_config_rules" {
   description = "Controls whether to create the AWS Config Rules"
+  type        = bool
   default     = true
 }
 
