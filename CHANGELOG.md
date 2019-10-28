@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 1.0.4
+
+**Released**: 2019.10.28
+
+**Commit Delta**: [Change from 1.0.3 release](https://github.com/plus3it/terraform-aws-tardigrade-config-rules/compare/1.0.3..1.0.4)
+
+**Summary**:
+
+*   Updates documentation generation make targets
+*   Adds documentation to the test modules
+*   Minor changelog fixup
+
+### 1.0.3
+
+**Released**: 2019.10.28
+
+**Commit Delta**: [Change from 1.0.2 release](https://github.com/plus3it/terraform-aws-tardigrade-config-rules/compare/1.0.2...1.0.3)
+
+**Summary**:
+
+*   Establishes dependency link between newer config rules and the config recorder
+
+### 1.0.2
+
+**Released**: 2019.10.17
+
+**Commit Delta**: [Change from 1.0.1 release](https://github.com/plus3it/terraform-aws-tardigrade-config-rules/compare/1.0.1...1.0.2)
+
+**Summary**:
+
+*   Adds ability to auto approve and merge Dependabot PRs
+
 ### 1.0.1
 
 **Released**: 2019.10.03
