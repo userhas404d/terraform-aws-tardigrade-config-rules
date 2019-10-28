@@ -567,7 +567,7 @@ resource "aws_config_config_rule" "restricted_common_ports_access" {
   count = var.create_config_rules && ! local.exclude_restricted_common_ports_access ? 1 : 0
 
   name        = "restricted-common-ports-access"
-  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
+  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports. Config recorder: ${var.config_recorder}"
 
   input_parameters = <<-EOF
     {
@@ -591,7 +591,7 @@ resource "aws_config_config_rule" "restricted_common_ports_database" {
   count = var.create_config_rules && ! local.exclude_restricted_common_ports_database ? 1 : 0
 
   name        = "restricted-common-ports-database"
-  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
+  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports. Config recorder: ${var.config_recorder}"
 
   input_parameters = <<-EOF
     {
@@ -618,7 +618,7 @@ resource "aws_config_config_rule" "ebs_snapshot_public_restorable_check" {
   count = var.create_config_rules && ! local.exclude_ebs_snapshot_public_restorable_check ? 1 : 0
 
   name                        = "ebs-snapshot-public-restorable-check"
-  description                 = "Checks whether Amazon Elastic Block Store (Amazon EBS) snapshots are not publicly restorable. The rule is NON_COMPLIANT if one or more snapshots with RestorableByUserIds field are set to all, that is, Amazon EBS snapshots are public."
+  description                 = "Checks whether Amazon Elastic Block Store (Amazon EBS) snapshots are not publicly restorable. The rule is NON_COMPLIANT if one or more snapshots with RestorableByUserIds field are set to all, that is, Amazon EBS snapshots are public. Config recorder: ${var.config_recorder}"
   input_parameters            = "{}"
   maximum_execution_frequency = "TwentyFour_Hours"
 
