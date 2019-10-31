@@ -66,150 +66,182 @@ data "template_file" "iam_password_policy" {
 
 }
 
+resource "null_resource" "dependencies" {
+  count = var.create_config_rules ? 1 : 0
+
+  triggers = {
+    config_recorder = var.config_recorder
+  }
+}
+
 resource "aws_config_config_rule" "cloudtrail_enabled" {
   count = var.create_config_rules && ! local.exclude_cloudtrail_enabled ? 1 : 0
 
   name             = "cloudtrail-enabled"
-  description      = var.config_recorder
+  description      = "Checks whether AWS CloudTrail is enabled in your AWS account. Optionally, you can specify which S3 bucket, SNS topic, and Amazon CloudWatch Logs ARN to use"
   input_parameters = data.template_file.cloudtrail_enabled[0].rendered
 
   source {
     owner             = "AWS"
     source_identifier = "CLOUD_TRAIL_ENABLED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "iam_password_policy" {
   count = var.create_config_rules && ! local.exclude_iam_password_policy ? 1 : 0
 
   name             = "iam-password-policy"
-  description      = var.config_recorder
+  description      = "Checks whether the account password policy for IAM users meets the specified requirements"
   input_parameters = data.template_file.iam_password_policy[0].rendered
 
   source {
     owner             = "AWS"
     source_identifier = "IAM_PASSWORD_POLICY"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_read_prohibited" {
   count = var.create_config_rules && ! local.exclude_s3_bucket_public_read_prohibited ? 1 : 0
 
   name        = "s3-bucket-public-read-prohibited"
-  description = var.config_recorder
+  description = "Checks that your Amazon S3 buckets do not allow public read access. The rule checks the Block Public Access settings, the bucket policy, and the bucket access control list (ACL)"
 
   source {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_PUBLIC_READ_PROHIBITED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "s3_bucket_public_write_prohibited" {
   count = var.create_config_rules && ! local.exclude_s3_bucket_public_write_prohibited ? 1 : 0
 
   name        = "s3-bucket-public-write-prohibited"
-  description = var.config_recorder
+  description = "Checks that your Amazon S3 buckets do not allow public write access. The rule checks the Block Public Access settings, the bucket policy, and the bucket access control list (ACL)"
 
   source {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_PUBLIC_WRITE_PROHIBITED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "s3_bucket_ssl_requests_only" {
   count = var.create_config_rules && ! local.exclude_s3_bucket_ssl_requests_only ? 1 : 0
 
   name        = "s3-bucket-ssl-requests-only"
-  description = var.config_recorder
+  description = "Checks whether S3 buckets have policies that require requests to use Secure Socket Layer (SSL)"
 
   source {
     owner             = "AWS"
     source_identifier = "S3_BUCKET_SSL_REQUESTS_ONLY"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "codebuild_project_envvar_awscred_check" {
   count = var.create_config_rules && ! local.exclude_codebuild_project_envvar_awscred_check ? 1 : 0
 
   name        = "codebuild-project-envvar-awscred-check"
-  description = var.config_recorder
+  description = "Checks whether the project contains environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY. The rule is NON_COMPLIANT when the project environment variables contains plaintext credentials"
 
   source {
     owner             = "AWS"
     source_identifier = "CODEBUILD_PROJECT_ENVVAR_AWSCRED_CHECK"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "codebuild_project_source_repo_url_check" {
   count = var.create_config_rules && ! local.exclude_codebuild_project_source_repo_url_check ? 1 : 0
 
   name        = "codebuild-project-source-repo-url-check"
-  description = var.config_recorder
+  description = "Checks whether the GitHub or Bitbucket source repository URL contains either personal access tokens or user name and password. The rule is COMPLIANT with the usage of OAuth to grant authorization for accessing GitHub or Bitbucket repositories"
 
   source {
     owner             = "AWS"
     source_identifier = "CODEBUILD_PROJECT_SOURCE_REPO_URL_CHECK"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "instances_in_vpc" {
   count = var.create_config_rules && ! local.exclude_instances_in_vpc ? 1 : 0
 
   name        = "instances-in-vpc"
-  description = var.config_recorder
+  description = "Checks whether your EC2 instances belong to a virtual private cloud (VPC). Optionally, you can specify the VPC ID to associate with your instances"
 
   source {
     owner             = "AWS"
     source_identifier = "INSTANCES_IN_VPC"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "ec2_volume_inuse_check" {
   count = var.create_config_rules && ! local.exclude_ec2_volume_inuse_check ? 1 : 0
 
   name        = "ec2-volume-inuse-check"
-  description = var.config_recorder
+  description = "Checks whether EBS volumes are attached to EC2 instances. Optionally checks if EBS volumes are marked for deletion when an instance is terminated"
 
   source {
     owner             = "AWS"
     source_identifier = "EC2_VOLUME_INUSE_CHECK"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "eip_attached" {
   count = var.create_config_rules && ! local.exclude_eip_attached ? 1 : 0
 
   name        = "eip-attached"
-  description = var.config_recorder
+  description = "Checks whether all Elastic IP addresses that are allocated to a VPC are attached to EC2 instances or in-use elastic network interfaces (ENIs)"
 
   source {
     owner             = "AWS"
     source_identifier = "EIP_ATTACHED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "lambda_function_public_access_prohibited" {
   count = var.create_config_rules && ! local.exclude_lambda_function_public_access_prohibited ? 1 : 0
 
   name        = "lambda-function-public-access-prohibited"
-  description = var.config_recorder
+  description = "Checks whether the AWS Lambda function policy attached to the Lambda resource prohibits public access. If the Lambda function policy allows public access it is NON_COMPLIANT"
 
   source {
     owner             = "AWS"
     source_identifier = "LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 resource "aws_config_config_rule" "root_account_mfa_enabled" {
   count = var.create_config_rules && ! local.exclude_root_account_mfa_enabled ? 1 : 0
 
   name        = "root-account-mfa-enabled"
-  description = var.config_recorder
+  description = "Checks whether users of your AWS account require a multi-factor authentication (MFA) device to sign in with root credentials"
 
   source {
     owner             = "AWS"
     source_identifier = "ROOT_ACCOUNT_MFA_ENABLED"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 ###########################
@@ -263,7 +295,7 @@ resource "aws_config_config_rule" "iam_access_key_rotation_check" {
   count = var.create_config_rules && ! local.exclude_iam_access_key_rotation_check ? 1 : 0
 
   name        = "iam-access-key-rotation-check"
-  description = var.config_recorder
+  description = "Checks that IAM User Access Keys have been rotated within the specified number of days"
 
   input_parameters = <<-EOF
     {
@@ -289,7 +321,10 @@ resource "aws_config_config_rule" "iam_access_key_rotation_check" {
     }
   }
 
-  depends_on = [aws_lambda_permission.iam_access_key_rotation_check]
+  depends_on = [
+    aws_lambda_permission.iam_access_key_rotation_check,
+    null_resource.dependencies,
+  ]
 }
 
 ### rds_vpc_public_subnet
@@ -308,7 +343,7 @@ module "lambda_rds_vpc_public_subnet" {
   source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.1.0"
 
   function_name = "config_rule_rds_vpc_public_subnet"
-  description   = "Check that no RDS Instances are in a Public Subnet"
+  description   = "Checks that no RDS Instances are in a Public Subnet"
   handler       = "rds_vpc_public_subnet.lambda_handler"
   runtime       = "python3.6"
   timeout       = 15
@@ -334,7 +369,7 @@ resource "aws_config_config_rule" "rds_vpc_public_subnet" {
   count = var.create_config_rules && ! local.exclude_rds_vpc_public_subnet ? 1 : 0
 
   name        = "rds-vpc-public-subnet"
-  description = var.config_recorder
+  description = "Checks that no RDS Instances are in a Public Subnet"
 
   scope {
     compliance_resource_types = ["AWS::RDS::DBInstance"]
@@ -353,7 +388,10 @@ resource "aws_config_config_rule" "rds_vpc_public_subnet" {
     }
   }
 
-  depends_on = [aws_lambda_permission.rds_vpc_public_subnet]
+  depends_on = [
+    aws_lambda_permission.rds_vpc_public_subnet,
+    null_resource.dependencies,
+  ]
 }
 
 ### iam_user_active
@@ -403,7 +441,7 @@ resource "aws_config_config_rule" "iam_user_active" {
   count = var.create_config_rules && ! local.exclude_iam_user_active ? 1 : 0
 
   name        = "iam-user-active"
-  description = var.config_recorder
+  description = "Checks if IAM users are active"
 
   input_parameters = <<-EOF
     {
@@ -428,7 +466,10 @@ resource "aws_config_config_rule" "iam_user_active" {
     }
   }
 
-  depends_on = [aws_lambda_permission.iam_user_active]
+  depends_on = [
+    aws_lambda_permission.iam_user_active,
+    null_resource.dependencies,
+  ]
 }
 
 ### config_enabled
@@ -468,7 +509,7 @@ resource "aws_config_config_rule" "config_enabled" {
   count = var.create_config_rules && ! local.exclude_config_enabled ? 1 : 0
 
   name        = "config-enabled"
-  description = var.config_recorder
+  description = "Checks that Config has been activated and is logging to a specific bucket and sending to a specifc SNS topic"
 
   input_parameters = <<-EOF
     {
@@ -491,7 +532,10 @@ resource "aws_config_config_rule" "config_enabled" {
     }
   }
 
-  depends_on = [aws_lambda_permission.config_enabled]
+  depends_on = [
+    aws_lambda_permission.config_enabled,
+    null_resource.dependencies,
+  ]
 }
 
 ### iam_mfa_for_console_access
@@ -540,7 +584,7 @@ resource "aws_config_config_rule" "iam_mfa_for_console_access" {
   count = var.create_config_rules && ! local.exclude_iam_mfa_for_console_access ? 1 : 0
 
   name        = "iam-mfa-for-console-access"
-  description = var.config_recorder
+  description = "Checks that all IAM users with console access have at least one MFA device"
 
   scope {
     compliance_resource_types = ["AWS::IAM::User"]
@@ -559,7 +603,10 @@ resource "aws_config_config_rule" "iam_mfa_for_console_access" {
     }
   }
 
-  depends_on = [aws_lambda_permission.iam_mfa_for_console_access]
+  depends_on = [
+    aws_lambda_permission.iam_mfa_for_console_access,
+    null_resource.dependencies,
+  ]
 }
 
 ### RESTRICTED COMMON PORTS: ACCESS
@@ -567,7 +614,7 @@ resource "aws_config_config_rule" "restricted_common_ports_access" {
   count = var.create_config_rules && ! local.exclude_restricted_common_ports_access ? 1 : 0
 
   name        = "restricted-common-ports-access"
-  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports. Config recorder: ${var.config_recorder}"
+  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
 
   input_parameters = <<-EOF
     {
@@ -584,6 +631,8 @@ resource "aws_config_config_rule" "restricted_common_ports_access" {
     owner             = "AWS"
     source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 ### RESTRICTED COMMON PORTS: DATABASE
@@ -591,7 +640,7 @@ resource "aws_config_config_rule" "restricted_common_ports_database" {
   count = var.create_config_rules && ! local.exclude_restricted_common_ports_database ? 1 : 0
 
   name        = "restricted-common-ports-database"
-  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports. Config recorder: ${var.config_recorder}"
+  description = "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports."
 
   input_parameters = <<-EOF
     {
@@ -611,6 +660,8 @@ resource "aws_config_config_rule" "restricted_common_ports_database" {
     owner             = "AWS"
     source_identifier = "RESTRICTED_INCOMING_TRAFFIC"
   }
+
+  depends_on = [null_resource.dependencies]
 }
 
 ### EBS SNAPSHOT PUBLIC RESTORABLE
@@ -618,7 +669,7 @@ resource "aws_config_config_rule" "ebs_snapshot_public_restorable_check" {
   count = var.create_config_rules && ! local.exclude_ebs_snapshot_public_restorable_check ? 1 : 0
 
   name                        = "ebs-snapshot-public-restorable-check"
-  description                 = "Checks whether Amazon Elastic Block Store (Amazon EBS) snapshots are not publicly restorable. The rule is NON_COMPLIANT if one or more snapshots with RestorableByUserIds field are set to all, that is, Amazon EBS snapshots are public. Config recorder: ${var.config_recorder}"
+  description                 = "Checks whether Amazon Elastic Block Store (Amazon EBS) snapshots are not publicly restorable. The rule is NON_COMPLIANT if one or more snapshots with RestorableByUserIds field are set to all, that is, Amazon EBS snapshots are public."
   input_parameters            = "{}"
   maximum_execution_frequency = "TwentyFour_Hours"
 
@@ -626,4 +677,6 @@ resource "aws_config_config_rule" "ebs_snapshot_public_restorable_check" {
     owner             = "AWS"
     source_identifier = "EBS_SNAPSHOT_PUBLIC_RESTORABLE_CHECK"
   }
+
+  depends_on = [null_resource.dependencies]
 }
