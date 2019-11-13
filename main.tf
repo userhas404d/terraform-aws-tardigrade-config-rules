@@ -271,7 +271,7 @@ module "lambda_iam_access_key_rotation_check" {
   function_name = "config_rule_iam_access_key_rotation_check"
   description   = "Checks that IAM User Access Keys have been rotated within the specified number of days"
   handler       = "iam_access_key_rotation-triggered.handler"
-  runtime       = "nodejs8.10"
+  runtime       = "nodejs10.x"
   timeout       = 15
   tags          = var.tags
 
