@@ -177,7 +177,7 @@ def is_key_still_valid(create_date, timeout_days):
 def key_age(create_date):
     today = datetime.utcnow().replace(tzinfo=dateutil.tz.tzutc())
     time_delta = today - create_date
-    return time_delta
+    return time_delta    
 
 def evaluate_parameters(rule_parameters):
     """Evaluate the rule parameters dictionary validity. Raise a ValueError for invalid parameters.

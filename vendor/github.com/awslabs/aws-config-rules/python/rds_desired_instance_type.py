@@ -8,7 +8,7 @@
 # Scope of Changes: RDS::DBInstance
 # Required Parameter: DBInstance
 # Example Value: db.t2.small
-#
+# 
 # See https://aws.amazon.com/ec2/instance-types/ for more instance types
 
 import boto3

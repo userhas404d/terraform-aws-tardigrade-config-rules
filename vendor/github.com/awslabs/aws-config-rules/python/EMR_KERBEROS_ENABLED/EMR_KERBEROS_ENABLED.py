@@ -139,12 +139,12 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
     evaluations = []
 
     emr_client = get_client('emr', event)
-
+    
     cluster_list = get_all_cluster(emr_client)
-
+    
     if not cluster_list:
         return None
-
+    
     for cluster in cluster_list:
 
         cluster_id = cluster["Id"]
@@ -153,11 +153,11 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
         if described_cluster["Status"]["State"] in ["TERMINATING", "TERMINATED", "TERMINATED_WITH_ERRORS"]:
             evaluations.append(build_evaluation(cluster_id, 'NOT_APPLICABLE', event))
             continue
-
+            
         if "SecurityConfiguration" not in described_cluster:
             evaluations.append(build_evaluation(cluster_id, 'NON_COMPLIANT', event, annotation='No Security Configuration is attached.'))
             continue
-
+   
         cluster_sc_details = json.loads(emr_client.describe_security_configuration(
             Name=described_cluster["SecurityConfiguration"]
                 )["SecurityConfiguration"])
@@ -217,7 +217,7 @@ def get_all_cluster(client):
     return all_clusters
 
 def evaluate_parameters(rule_parameters):
-
+    
     if not rule_parameters:
         return {}
     if "TicketLifetimeInHours" in rule_parameters and not str(rule_parameters["TicketLifetimeInHours"]).isnumeric():

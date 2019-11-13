@@ -99,7 +99,7 @@ def evaluate_parameters(rule_parameters):
 
     Keyword arguments:
     rule_parameters -- the Key/Value dictionary of the Config Rules parameters
-    """
+    """   
     if rule_parameters:
         authorized_vpc_ids = rule_parameters['AuthorizedVpcIds'].split(',')
         for i,authorized_vpc_id in enumerate(authorized_vpc_ids):

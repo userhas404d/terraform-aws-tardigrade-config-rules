@@ -1,5 +1,5 @@
 {
-  "Version": "1.0",
+  "Version": "1.0", 
   "Parameters": {
     "RuleName": "S3_BUCKET_VERSIONING_ENABLED",
     "SourceRuntime": null,

@@ -31,12 +31,12 @@ Rule Parameters:
 	Comma-separated list of specific Customer Managed Key Ids, that are expected not to be scheduled for deletion.
 
 Scenarios:
-	Scenario 1:
-	Given: Rule parameter kmsKeyIds are configured and not valid
-	 Then: Return ERROR
+    	Scenario 1:
+      	Given: Rule parameter kmsKeyIds are configured and not valid
+     	 Then: Return ERROR
 
-	Scenario 2:
-	Given: No CMKs present
+    	Scenario 2:
+    	Given: No CMKs present
          Then: Return NOT_APPLICABLE
 
 	Scenario 3:
@@ -52,10 +52,10 @@ Scenarios:
 	 Then: Return NON_COMPLIANT
 
 	Scenario 5:
-	Given: At least 1 CMK is present
-	  And: Rule parameter kmsKeyIds are configured and valid
-	  And: The KMS key in the parameter is not an existing kms key
-	 Then: Return NOT_APPLICABLE
+    	Given: At least 1 CMK is present
+      	  And: Rule parameter kmsKeyIds are configured and valid
+      	  And: The KMS key in the parameter is not an existing kms key
+     	 Then: Return NOT_APPLICABLE
 
 	Scenario 6:
 	Given: At least 1 CMK is present

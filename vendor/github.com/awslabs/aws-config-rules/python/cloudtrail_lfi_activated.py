@@ -32,17 +32,17 @@ def evaluate_compliance(configuration_item):
 			"compliance_type": "NON_COMPLIANT",
 			"annotation": 'Log File Validation is disabled.'
 		}
-
+	
 def lambda_handler(event, context):
 	invoking_event      = json.loads(event['invokingEvent'])
 	configuration_item  = invoking_event["configurationItem"]
 	evaluation          = evaluate_compliance(configuration_item)
 	config              = boto3.client('config')
-
+	
 	result_token = "No token found."
 	if "resultToken" in event:
 		result_token = event["resultToken"]
-
+	
 	config.put_evaluations(
 		Evaluations=[
 			{

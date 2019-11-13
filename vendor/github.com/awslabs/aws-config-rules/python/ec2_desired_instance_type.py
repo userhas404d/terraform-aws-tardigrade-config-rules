@@ -8,7 +8,7 @@
 # Scope of Changes: EC2:Instance
 # Required Parameter: desiredInstanceType
 # Example Value: t2.small
-#
+# 
 # See https://aws.amazon.com/ec2/instance-types/ for more instance types
 
 import boto3
@@ -54,3 +54,5 @@ def lambda_handler(event, context):
            },
        ],
        ResultToken=event['resultToken'])
+
+

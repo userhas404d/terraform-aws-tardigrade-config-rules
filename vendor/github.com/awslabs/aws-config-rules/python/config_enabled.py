@@ -40,10 +40,10 @@ def lambda_handler(event, context):
     # Check that there are delivery channels and that they're mapping to the appropriate buckets
     delivery_channels_response = client.describe_delivery_channels()
     print(delivery_channels_response['DeliveryChannels'])
-
+	
     if 'DeliveryChannels' not in delivery_channels_response or len(delivery_channels_response['DeliveryChannels']) < 1:
         compliance_type = 'NON_COMPLIANT'
-
+		
     if 's3BucketName' in rule_parameters:
         for channel in delivery_channels_response['DeliveryChannels']:
             if channel['s3BucketName'] != rule_parameters['s3BucketName']:

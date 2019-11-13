@@ -43,14 +43,14 @@ def evaluate_configuration_change_compliance(invoking_event, event_left_scope):
                 'OrderingTimestamp': datetime.now(utc)
             }
         )
-
+    
     return evaluations
 
 # Verifies that all volumes captured by the AWSConfig service have had a snapshot taken within the last <required_snapshot_req_hours> hours
 def evaluate_scheduled_compliance(invoking_event, required_snapshot_freq_hours):
     evaluations = []
     oldest_snapshot_allowed_time = datetime.now(utc) - timedelta(hours = required_snapshot_freq_hours)
-
+    
     # List current volumes from Config
     volumes = list_config_discovered_volumes()
     for volume in volumes:
@@ -58,7 +58,7 @@ def evaluate_scheduled_compliance(invoking_event, required_snapshot_freq_hours):
         volume_state = get_latest_state(volume)
         if volume_state['resourceCreationTime'] > oldest_snapshot_allowed_time:
             continue
-
+        
         # Retrieve the completed snapshots for each volume
         snapshots = retrieve_snapshots_for_volume(volume)
 
@@ -67,7 +67,7 @@ def evaluate_scheduled_compliance(invoking_event, required_snapshot_freq_hours):
             # Set to COMPLIANT only if the completed snapshot was initiated within the expected frequency
             if snapshot['StartTime'] > oldest_snapshot_allowed_time:
                 compliance = 'COMPLIANT'
-
+            
         evaluations.append(
             {
                 'ComplianceResourceType': volume['resourceType'],
@@ -76,7 +76,7 @@ def evaluate_scheduled_compliance(invoking_event, required_snapshot_freq_hours):
                 'OrderingTimestamp': datetime.now(utc)
             }
         )
-
+    
     return evaluations
 
 # Retrieves the completed snapshots for the provided volume
@@ -113,7 +113,7 @@ def list_config_discovered_volumes():
             ldr_pagination_token = discovered_volumes_response['nextToken']
         else:
             break
-
+    
     return volumes
 
 # Get the most recent state of the volume from AWSConfig
@@ -128,7 +128,7 @@ def get_latest_state(volume):
 def lambda_handler(event, context):
     invoking_event = json.loads(event['invokingEvent'])
     rule_parameters = json.loads(event['ruleParameters'])
-
+    
     required_snapshot_freq_hours = 0
     if 'requiredSnapshotFrequencyHours' in rule_parameters:
         required_snapshot_freq_hours = int(rule_parameters['requiredSnapshotFrequencyHours'])
@@ -141,7 +141,7 @@ def lambda_handler(event, context):
         evaluations = evaluate_scheduled_compliance(invoking_event, required_snapshot_freq_hours)
     else:
         raise Exception('Unexpected message type ' + str(invoking_event))
-
+    
     # Report Evaluations to the AWSConfig service
     while (evaluations):
         response = config.put_evaluations(

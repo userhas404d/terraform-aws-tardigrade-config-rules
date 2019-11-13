@@ -30,7 +30,7 @@ public class RootAccountMFAEnabled {
 
     /**
      * This handler function is executed when AWS Lambda passes the event and context objects.
-     *
+     * 
      * @param event
      *            Event object published by AWS Config to invoke the function.
      * @param context

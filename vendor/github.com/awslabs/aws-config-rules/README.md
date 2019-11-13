@@ -31,14 +31,14 @@ Add a rule to AWS Config by completing the following steps. For more detailed st
 	- Verify that your region is set to one that supports AWS Config rules.
 	- For the list of supported regions, see [AWS Config Regions and Endpoints](http://docs.aws.amazon.com/general/latest/gr/rande.html#awsconfig_region).
 2. Create a Lambda function.
-	- Provide your code using the method required by the code entry type that you choose.
+	- Provide your code using the method required by the code entry type that you choose.  
 	- If you are adding a Python or Node.js function, you can copy and paste the code from the sample that you want to use. If you are adding a Java function, you must provide a JAR file that contains the Java classes. For instructions to build the JAR file, see [Creating an AWS Config Rule with Java](./java/HOWTO.md).
 	- For the role that you assign to your function, choose the **AWS Config Rules permission** option. This includes *AWSConfigRulesExecutionRole*, an AWS managed policy that allows your Lambda function permission to "put" evaluations.
 	- For **Handler**, if you are adding a Python or Node.js function, keep the default value. If you are adding a Java function, specify the handler value for to the Java function that you want to use. For the handler values, see [AWS Config Rules (Java)](./java/RULES_JAVA.md).
-3. After you create the function, take note of its ARN.
-4. Open the [AWS Config console](https://console.aws.amazon.com/config/).
-	- Verify that your region is set to the same region in which you created the AWS Lambda function for your custom rule.
-5. Use the AWS Config console to add a custom rule.
+3. After you create the function, take note of its ARN.  
+4. Open the [AWS Config console](https://console.aws.amazon.com/config/).   
+	- Verify that your region is set to the same region in which you created the AWS Lambda function for your custom rule.  
+5. Use the AWS Config console to add a custom rule.  
 	- For **AWS Lambda function ARN**, specify the ARN of the function that you created.
 	- For **Trigger type**, if you are using any of the *triggered samples* from this repository, choose **Configuration changes**. If you are using any of the *periodic* samples from this repository, choose **Periodic**.
 	- For the rule parameters, specify any required parameters.

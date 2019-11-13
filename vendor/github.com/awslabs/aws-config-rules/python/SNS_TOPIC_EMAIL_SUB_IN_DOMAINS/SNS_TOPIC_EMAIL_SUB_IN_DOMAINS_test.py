@@ -181,3 +181,4 @@ def sts_mock():
             "SessionToken": "string"}}
     STS_CLIENT_MOCK.reset_mock(return_value=True)
     STS_CLIENT_MOCK.assume_role = MagicMock(return_value=assume_role_response)
+    

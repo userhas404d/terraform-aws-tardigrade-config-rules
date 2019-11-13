@@ -74,7 +74,7 @@ class ComplianceTest(unittest.TestCase):
             'IsMultiRegionTrail': False,
             'LogFileValidationEnabled': False,
             'HasCustomEventSelectors': False
-        }]}
+        }]}    
     describe_trail_valid_no_key = {
         'trailList': [{
             'Name': 'ct-name-1',

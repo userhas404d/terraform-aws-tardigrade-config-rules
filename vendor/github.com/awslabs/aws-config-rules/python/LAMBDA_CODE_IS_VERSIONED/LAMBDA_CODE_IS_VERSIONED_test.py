@@ -42,30 +42,30 @@ class TestOnLambdaCodeIsVersioned(unittest.TestCase):
     functionListWithoutFunctions = {"Functions": []}
 
 
-    versionListWithVersioning = {
+    versionListWithVersioning = { 
       "Versions": [
-        {"Version": "$LATEST"},
-        {"Version": "1"},
-        {"Version": "2"},
+        {"Version": "$LATEST"}, 
+        {"Version": "1"}, 
+        {"Version": "2"}, 
         {"Version": "3"}
       ]
     }
-    versionListWithoutVersioning = {
+    versionListWithoutVersioning = { 
       "Versions": [{"Version": "$LATEST"}]}
 
     functionWithAliasNotPointingToLatest = {
       "Aliases": [
-        {"FunctionVersion": "3"},
-        {"FunctionVersion": "1"},
-        {"FunctionVersion": "1"},
+        {"FunctionVersion": "3"}, 
+        {"FunctionVersion": "1"}, 
+        {"FunctionVersion": "1"}, 
         {"FunctionVersion": "3"}
       ]
     }
     functionWithAliasAndPointingToLatest = {
       "Aliases": [
-        {"FunctionVersion": "3"},
-        {"FunctionVersion": "1"},
-        {"FunctionVersion": "$LATEST"},
+        {"FunctionVersion": "3"}, 
+        {"FunctionVersion": "1"}, 
+        {"FunctionVersion": "$LATEST"}, 
         {"FunctionVersion": "3"}
       ]
     }
@@ -76,11 +76,11 @@ class TestOnLambdaCodeIsVersioned(unittest.TestCase):
         {
           "EvaluationResultIdentifier": {
             "EvaluationResultQualifier": {
-              "ResourceId": "rdkLambdaVersion",
+              "ResourceId": "rdkLambdaVersion", 
             }
-          },
-        },
-      ],
+          }, 
+        }, 
+      ], 
     }
     complianceEvaluationWithEmptyResult = {
       "EvaluationResults": []
@@ -184,7 +184,7 @@ def build_lambda_event():
         'accountId': '123456789012',
         'configRuleArn': 'arn:aws:config:us-east-1:123456789012:config-rule/config-rule-8fngan',
         'resultToken':'token'
-}
+} 
 
 def assert_successful_evaluation(testClass, response, resp_expected, evaluations_count=1):
     if isinstance(response, dict):

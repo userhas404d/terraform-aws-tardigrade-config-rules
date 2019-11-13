@@ -48,7 +48,7 @@ import boto3
 import botocore
 import json
 
-
+ 
 APPLICABLE_RESOURCES = ["AWS::EC2::SecurityGroup"]
 
 # Specify the required ingress permissions using the same key layout as that provided in the
@@ -144,7 +144,7 @@ def evaluate_compliance(configuration_item, debug_enabled):
             "compliance_type" : "NON_COMPLIANT",
             "annotation" : "describe_security_groups failure on group " + group_id
         }
-
+        
     if debug_enabled:
         print("security group definition: ", json.dumps(response, indent=2))
 
@@ -189,7 +189,7 @@ def evaluate_compliance(configuration_item, debug_enabled):
     }
 
 # lambda_handler
-#
+# 
 # This is the main handle for the Lambda function.  AWS Lambda passes the function an event and a context.
 # If "debug" is specified as a rule parameter, then debugging is enabled.
 
@@ -201,7 +201,7 @@ def lambda_handler(event, context):
     debug_enabled = False
 
     if "debug" in rule_parameters:
-        debug_enabled = rule_parameters["debug"]
+        debug_enabled = rule_parameters["debug"] 
 
     if debug_enabled:
         print("Received event: " + json.dumps(event, indent=2))

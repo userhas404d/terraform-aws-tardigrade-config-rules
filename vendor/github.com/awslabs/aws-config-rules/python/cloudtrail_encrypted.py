@@ -7,7 +7,7 @@
 # Trigger Type: Change Triggered
 # Scope of Changes: AWS::CloudTrail::Trail
 # Required Parameters: None
-# Optional Parameter: KMSKeyARN
+# Optional Parameter: KMSKeyARN 
 # Optional Parameter value example : arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
 
 import json
@@ -36,7 +36,7 @@ def evaluate_compliance(configuration_item, rule_parameters, optional_parameter)
 			"compliance_type": "NOT_APPLICABLE",
 			"annotation": "NOT_APPLICABLE"
 		}
-
+	
 	compliance_status = False
 	print configuration_item
 	kms_key_id = configuration_item["configuration"]["kmsKeyId"]
@@ -66,20 +66,20 @@ def evaluate_compliance(configuration_item, rule_parameters, optional_parameter)
 def lambda_handler(event, context):
 	invoking_event      = json.loads(event['invokingEvent'])
 	configuration_item  = invoking_event["configurationItem"]
-
+	
 	rule_parameters 	= json.loads(event["ruleParameters"])
 	print rule_parameters
-
+	
 	rule_parameters = normalize_optional_parameter(rule_parameters,OPTIONAL_PARAMETER)
 	print rule_parameters
-
+	
 	evaluation          = evaluate_compliance(configuration_item, rule_parameters)
 	config              = boto3.client('config')
-
+	
 	result_token = "No token found."
 	if "resultToken" in event:
 		result_token = event["resultToken"]
-
+	
 	config.put_evaluations(
 		Evaluations=[
 			{

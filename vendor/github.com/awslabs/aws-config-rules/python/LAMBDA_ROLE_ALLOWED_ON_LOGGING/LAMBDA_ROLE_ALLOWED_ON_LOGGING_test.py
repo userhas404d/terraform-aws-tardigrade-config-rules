@@ -54,7 +54,7 @@ def build_invoking_event(item_status='OK'):
         "messageType":"SomeType",
         "recordVersion":"SomeVersion",
         "configurationItem":
-        {
+        {   
             "relationships":[{"resourceName":"some_role"}],
             "configurationItemCaptureTime": "2018-05-11T17:53:48.872Z",
             "configurationItemStatus": item_status,
@@ -91,7 +91,7 @@ def gen_statement(action="*", resource="*", effect="Allow"):
         "Resource": resource,
         "Effect": effect
     }
-
+    
 def gen_statement_list(statement=gen_statement(), statement2=False, statement3=False):
     statement_list = []
     statement_list.append(statement)
@@ -119,12 +119,12 @@ def gen_policy_api(type="inline", statement_list=gen_statement_list()):
                     }
                 ]
             }
-    if type == "get_policy":
+    if type == "get_policy": 
         return {
             "Policy": {
                 "PolicyName": "some-policy-name",
                 "Arn": "some-policy-arn",
-                "DefaultVersionId": "some-version-id"
+                "DefaultVersionId": "some-version-id" 
                 }
             }
     if type == "get_policy_version":
@@ -168,7 +168,7 @@ class TestScenario3NoPolicyOnRole(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "NON_COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+  
 class TestScenario4ActionStar(unittest.TestCase):
 
     def test_COMPLIANT_action_star_allow_string_inline(self):
@@ -192,7 +192,7 @@ class TestScenario4ActionStar(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_NON_COMPLIANT_action_star_deny_inline(self):
         get_pl = gen_policy_api(statement_list=gen_statement_list(gen_statement(effect="Deny")))
         list_attached_role_pl = {"AttachedPolicies": []}
@@ -225,7 +225,7 @@ class TestScenario4ActionStar(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_COMPLIANT_action_star_allow_managed(self):
         list_attached_role_pl = gen_policy_api(type="list_attached")
         get_pl = gen_policy_api(type="get_policy")
@@ -272,7 +272,7 @@ class TestScenario4ActionStar(unittest.TestCase):
         assert_successful_evaluation(self, response, resp_expected)
 
 class TestScenario5LogStar(unittest.TestCase):
-
+    
     def test_COMPLIANT_action_logstar_allow_string_inline(self):
         get_pl = gen_policy_api(statement_list=gen_statement_list(gen_statement(action="log:*")))
         list_attached_role_pl = {"AttachedPolicies": []}
@@ -294,7 +294,7 @@ class TestScenario5LogStar(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_NON_COMPLIANT_action_logstar_deny_inline(self):
         get_pl = gen_policy_api(statement_list=gen_statement_list(gen_statement(action="log:*",effect="Deny")))
         list_attached_role_pl = {"AttachedPolicies": []}
@@ -327,7 +327,7 @@ class TestScenario5LogStar(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_COMPLIANT_action_logstar_allow_managed(self):
         list_attached_role_pl = gen_policy_api(type="list_attached")
         get_pl = gen_policy_api(type="get_policy")
@@ -372,7 +372,7 @@ class TestScenario5LogStar(unittest.TestCase):
         response = rule.lambda_handler(lambdaEvent, {})
         resp_expected = "COMPLIANT"
         assert_successful_evaluation(self, response, resp_expected)
-
+    
 class TestScenario6LogExactActions(unittest.TestCase):
     CreateLogGroup = gen_statement(action="logs:CreateLogGroup")
     CreateLogStream = gen_statement(action="logs:CreateLogStream")
@@ -395,7 +395,7 @@ class TestScenario6LogExactActions(unittest.TestCase):
             response = rule.lambda_handler(lambdaEvent, {})
             resp_expected = "COMPLIANT"
             assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_NON_COMPLIANT_action_logexactaction_inline(self):
         for state in [self.statement_list_all_in_three_with_deny, self.statement_list_all_in_three_with_bad_resource]:
             get_pl = gen_policy_api(statement_list=state)
@@ -407,7 +407,7 @@ class TestScenario6LogExactActions(unittest.TestCase):
             response = rule.lambda_handler(lambdaEvent, {})
             resp_expected = "NON_COMPLIANT"
             assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_COMPLIANT_action_logexactaction_managed(self):
         for state in [self.statement_list_all_in_one, self.statement_list_all_in_three]:
             list_attached_role_pl = gen_policy_api(type="list_attached")
@@ -423,7 +423,7 @@ class TestScenario6LogExactActions(unittest.TestCase):
             response = rule.lambda_handler(lambdaEvent, {})
             resp_expected = "COMPLIANT"
             assert_successful_evaluation(self, response, resp_expected)
-
+        
     def test_NOT_COMPLIANT_action_logexactaction_managed(self):
         for state in [self.statement_list_all_in_three_with_deny, self.statement_list_all_in_three_with_bad_resource]:
             list_attached_role_pl = gen_policy_api(type="list_attached")

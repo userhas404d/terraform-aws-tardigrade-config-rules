@@ -141,8 +141,8 @@ def is_statements_include_full_star_allow(statements):
         print("Not recognized statement type:")
         print(statements)
         return False
-
-    for statement in statement_list:
+    
+    for statement in statement_list:        
         if statement['Effect'] == 'Deny':
             continue
 

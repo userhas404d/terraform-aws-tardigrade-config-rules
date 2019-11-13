@@ -1,7 +1,7 @@
 //
 // This file made available under CC0 1.0 Universal (https://creativecommons.org/publicdomain/zero/1.0/legalcode)
 //
-// RDS DB Instances are encrypted and if an optional KMS Key ARN parameter is provided, we check whether the DB Instances were encrypted using the specified key
+// RDS DB Instances are encrypted and if an optional KMS Key ARN parameter is provided, we check whether the DB Instances were encrypted using the specified key 
 //
 // Trigger Type: Change Triggered
 // Scope of Changes: RDS:Instance
@@ -22,11 +22,11 @@ function evaluateCompliance(configurationItem, ruleParameters) {
     if ('AWS::RDS::DBInstance' !== configurationItem.resourceType) {
         return 'NOT_APPLICABLE';
     }
-
-    if (configurationItem.configuration.storageEncrypted)
+    
+    if (configurationItem.configuration.storageEncrypted) 
     {
-	//If KMS Key is provided as a rule parameter, check if the dbinstance is using this key for encryption
-	if(ruleParameters.KMSKeyARN)
+    	//If KMS Key is provided as a rule parameter, check if the dbinstance is using this key for encryption
+    	if(ruleParameters.KMSKeyARN)
         {
             // Encrypted with correct key
             if(ruleParameters.KMSKeyARN === configurationItem.configuration.kmsKeyId){

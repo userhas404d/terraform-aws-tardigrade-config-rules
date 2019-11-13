@@ -48,7 +48,7 @@ class ParameterTests(unittest.TestCase):
     # Check for any invalid parameter (such as "traffictype" instead of "TrafficType")
     def test_error_invalid_parameter_name(self):
         ec2_client_mock.reset_mock(return_value=True)
-
+        
         ruleParam = '{"traffictype": "ACCEPT"}'
         lambdaEvent = build_lambda_scheduled_event(rule_parameters=ruleParam)
 
@@ -58,7 +58,7 @@ class ParameterTests(unittest.TestCase):
     # Check for any invalid parameter values (such as TrafficType as "ALLOW" instead of "ACCEPT")
     def test_invalid_traffictype_parameter_value(self):
         ec2_client_mock.reset_mock(return_value=True)
-
+        
         ruleParam = '{"TrafficType": "ALLOW"}'
         lambdaEvent = build_lambda_scheduled_event(rule_parameters=ruleParam)
 
@@ -69,19 +69,19 @@ class ParameterTests(unittest.TestCase):
     # Check for invalid parameter values of WhiteListedVPC
     def test_error_invalid_vpc_parameter_value(self):
         ec2_client_mock.reset_mock(return_value=True)
-
+        
         ruleParam = '{"WhiteListedVPC": "vpc-asd123, vpc_1234rd", "TrafficType": "ALLOW"}'
         lambdaEvent = build_lambda_scheduled_event(rule_parameters=ruleParam)
 
-        response = rule.lambda_handler(lambdaEvent, {})
+        response = rule.lambda_handler(lambdaEvent, {}) 
         assert_customer_error_response(self, response, 'InvalidParameterValueException')
-
+        
 
 class ComplianceTests(unittest.TestCase):
     # Check for VPC has flow logs enabled with TrafficType as ALL and no parameter provided
     def test_COMPLIANT_Flow_Log_Enabled_TrafficType_ALL(self):
         ec2_client_mock.reset_mock(return_value=True)
-
+        
         Des_VPC = {"Vpcs": [{"VpcId": "vpc-asd123", "CidrBlock": "10.10.0.0/16"}]}
         ec2_client_mock.describe_vpcs = MagicMock(return_value = Des_VPC)
         Des_Flow = {"FlowLogs": [{"ResourceId": "vpc-asd123", "TrafficType": "ALL"}]}
