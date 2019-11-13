@@ -10,7 +10,7 @@
 # Example Value: ^prod(us|eu|br)[lw]box[0-9]{3}$ (which will match 'produslbox001')
 # Required Parameters: securityGroupName
 # Example Value: MySecGroup
-#
+# 
 
 import boto3
 import json
@@ -36,7 +36,7 @@ def evaluate_compliance(config_item, rule_parameters):
             # if so, initialize to 'non-compliant'
             evaluation = 'NON_COMPLIANT'
             secGroups = configuration['securityGroups']
-            # iterate through the security groups and see if the provided secGroup name is in the list.
+            # iterate through the security groups and see if the provided secGroup name is in the list. 
             # if so, set compliance to 'compliant'
             for secGroup in secGroups:
                 if (secGroup['groupName'] == rule_parameters['securityGroupName']):
@@ -64,3 +64,5 @@ def lambda_handler(event, context):
            },
        ],
        ResultToken=event['resultToken'])
+
+

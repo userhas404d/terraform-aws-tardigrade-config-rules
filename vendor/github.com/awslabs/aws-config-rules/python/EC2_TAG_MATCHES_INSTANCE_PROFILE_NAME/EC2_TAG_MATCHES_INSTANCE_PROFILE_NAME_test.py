@@ -54,7 +54,7 @@ class SampleTest(unittest.TestCase):
         expected_response = []
         expected_response.append(build_expected_response("NOT_APPLICABLE", "some-resource-id"))
         assert_successful_evaluation(self, response, expected_response)
-
+    
     # Scenario 2 : EC2 instance does not have TAG_VALUE_MUST_INCLUDE in tag value and has no instance profile.
     def test_rule_scenario2(self):
         application_role = {"application_role": "blah"}
@@ -63,7 +63,7 @@ class SampleTest(unittest.TestCase):
         expected_response = []
         expected_response.append(build_expected_response("NOT_APPLICABLE", "some-resource-id"))
         assert_successful_evaluation(self, response, expected_response)
-
+    
     # Scenario 3 : EC2 instance does not have TAG_VALUE_MUST_INCLUDE in tag value and instance profile does not have NAME_ROLE_MUST_INCLUDE in IAM instance profile
     def test_rule_scenario3(self):
         application_role = {"application_role": "blah"}
@@ -73,8 +73,8 @@ class SampleTest(unittest.TestCase):
         expected_response = []
         expected_response.append(build_expected_response("NOT_APPLICABLE", "some-resource-id"))
         assert_successful_evaluation(self, response, expected_response)
-
-    # Scenario 4 : EC2 instance does not have TAG_VALUE_MUST_INCLUDE in tag value but has NAME_ROLE_MUST_INCLUDE in IAM instance profile
+    
+    # Scenario 4 : EC2 instance does not have TAG_VALUE_MUST_INCLUDE in tag value but has NAME_ROLE_MUST_INCLUDE in IAM instance profile   
     def test_rule_scenario4(self):
         application_role = {"application_role": "blah"}
         instance_profile = {"arn": "arn:aws:iam::123456789012:instance-profile/aws-poc.np.db.ec2role.iaminstancerole"}
@@ -83,7 +83,7 @@ class SampleTest(unittest.TestCase):
         expected_response = []
         expected_response.append(build_expected_response("NON_COMPLIANT", "some-resource-id", annotation="Tag value for 'application_role' doesn't have 'DB' but IAM Instance Profile has '.db.'"))
         assert_successful_evaluation(self, response, expected_response)
-
+    
     # Scenario 5 : EC2 instance has TAG_VALUE_MUST_INCLUDE in tag value but does not have an IAM instance profile
     def test_rule_scenario5(self):
         application_role = {"application_role": "DB/APP"}
@@ -93,17 +93,17 @@ class SampleTest(unittest.TestCase):
         expected_response = []
         expected_response.append(build_expected_response("NON_COMPLIANT", "some-resource-id", annotation="Tag value for 'application_role' has 'DB' but there is no IAM instance profile for the resource"))
         assert_successful_evaluation(self, response, expected_response)
-
+        
     # Scenario 6 : EC2 instance has TAG_VALUE_MUST_INCLUDE in tag value but does not have NAME_ROLE_MUST_INCLUDE in IAM instance profile
     def test_rule_scenario6(self):
         application_role = {"application_role": "DB/APP"}
         instance_profile = {"arn": "arn:aws:iam::123456789012:instance-profile/aws-poc.np.non-db.ec2role.iaminstancerole"}
-        invoking_event = build_invoking_event(application_role, instance_profile)
+        invoking_event = build_invoking_event(application_role, instance_profile)        
         response = rule.lambda_handler(build_lambda_event(ruleParameters='{}', invoking_event=invoking_event), "")
         expected_response = []
         expected_response.append(build_expected_response("NON_COMPLIANT", "some-resource-id", annotation="Tag value for 'application_role' has 'DB' but IAM Instance Profile doesn't have '.db.'"))
         assert_successful_evaluation(self, response, expected_response)
-
+        
     # Scenario 7 : EC2 instance has TAG_VALUE_MUST_INCLUDE in tag value and NAME_ROLE_MUST_INCLUDE in IAM instance profile
     def test_rule_scenario7(self):
         application_role = {"application_role": "DB/APP"}

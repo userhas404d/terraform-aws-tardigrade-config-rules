@@ -18,7 +18,7 @@ import boto3
 APPLICABLE_RESOURCES = ["AWS::EC2::Instance"]
 
 
-# Iterate through required tags ensureing each required tag is present,
+# Iterate through required tags ensureing each required tag is present, 
 # and value is one of the given valid values
 def find_violation(current_tags, required_tags):
     violation = ""
@@ -58,7 +58,7 @@ def evaluate_compliance(configuration_item, rule_parameters):
         }
 
     current_tags = configuration_item["configuration"].get("tags")
-    violation = find_violation(current_tags, rule_parameters)
+    violation = find_violation(current_tags, rule_parameters)        
 
     if violation:
         return {

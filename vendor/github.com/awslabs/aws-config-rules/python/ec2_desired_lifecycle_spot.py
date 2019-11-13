@@ -7,7 +7,7 @@
 # Scope of Changes: EC2:Instance
 # Required Parameter: desiredLifecycle
 # Required Value: spot
-#
+# 
 # See https://aws.amazon.com/ec2/spot/ to learn more about EC2 Spot Instances
 
 import boto3
@@ -51,3 +51,5 @@ def lambda_handler(event, context):
            },
        ],
        ResultToken=event['resultToken'])
+
+

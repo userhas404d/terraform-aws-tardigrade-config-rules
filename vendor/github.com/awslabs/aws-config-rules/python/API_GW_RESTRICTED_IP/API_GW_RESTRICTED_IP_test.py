@@ -71,7 +71,7 @@ class TestsOnParameter(unittest.TestCase):
             self.assertEqual(response['customerErrorCode'], 'InvalidParameterValueException')
             value = json.loads(invalid_entry)['WhitelistedIPs']
             self.assertEqual(response['customerErrorMessage'], 'The value in parameter "WhitelistedIPs" [' + str(value) + '] is not a valid IP or a valid IP network.')
-
+    
     def test_user_whitelist_parameters_double_comma(self):
         invalid_param_double_comma = '{"WhitelistedIPs":"10.1.1.1,,10.1.1.2"}'
         response = rule.lambda_handler(build_lambda_scheduled_event(rule_parameters=invalid_param_double_comma), {})
@@ -81,29 +81,29 @@ class TestsOnParameter(unittest.TestCase):
 class TestsOnCompliance(unittest.TestCase):
 
     valid_whitelist_ip_single = '{"WhitelistedIPs":"10.1.1.1"}'
-
+    
     valid_whitelist_ip_network = '{"WhitelistedIPs":"10.1.1.1/24"}'
-
+    
     get_rest_with_api_private = {
         'items': [{'name': 'name-api-1', 'endpointConfiguration': {'types': ['PRIVATE']}},
                   {'name': 'name-api-2', 'endpointConfiguration': {'types': ['PRIVATE']}}]
     }
-
+    
     get_rest_with_apis_no_policy = {
         'items': [{'name': 'name-api-1', 'endpointConfiguration': {'types': ['EDGE']}},
                   {'name': 'name-api-2', 'endpointConfiguration': {'types': ['REGIONAL']}},
                   {'name': 'name-api-3', 'endpointConfiguration': {'types': ['PRIVATE']}}]
     }
-
+    
     get_rest_with_apis_policy_no_allow_no_condition_no_ipadress = {
         'items': [{'name': 'name-api-1-no-allow',
-                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Deny\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"arn:aws:iam::112233445566:user\\/batman\\\"},\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"},{\\\"Effect\\\":\\\"Deny\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.24.34.0\\/23\\\",\\\"10.24.34.0\\/24\\\"]}}}]}',
+                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Deny\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"arn:aws:iam::112233445566:user\\/batman\\\"},\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"},{\\\"Effect\\\":\\\"Deny\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.24.34.0\\/23\\\",\\\"10.24.34.0\\/24\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}},
                     {'name': 'name-api-2-no-condition',
-                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"arn:aws:iam::112233445566:user\\/batman\\\"},\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"},{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"}]}',
+                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":{\\\"AWS\\\":\\\"arn:aws:iam::112233445566:user\\/batman\\\"},\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"},{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\\"}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}},
                    {'name': 'name-api-3-no-ipaddress',
-                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"NotIpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.24.34.0\\/23\\\",\\\"10.24.34.0\\/24\\\"]}}}]}',
+                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"NotIpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.24.34.0\\/23\\\",\\\"10.24.34.0\\/24\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}}
                    ]
     }
@@ -131,7 +131,7 @@ class TestsOnCompliance(unittest.TestCase):
         resp_expected.append(build_expected_response('NON_COMPLIANT', 'name-api-2', annotation='No resource policy is attached.'))
         resp_expected.append(build_expected_response('NOT_APPLICABLE', 'name-api-3'))
         assert_successful_evaluation(self, response, resp_expected, 3)
-
+    
     def test_no_allow_no_condition_no_ipadress(self):
         apigw_client_mock.get_rest_apis = MagicMock(return_value=self.get_rest_with_apis_policy_no_allow_no_condition_no_ipadress)
         response = rule.lambda_handler(build_lambda_scheduled_event(rule_parameters=self.valid_whitelist_ip_single), {})
@@ -142,13 +142,13 @@ class TestsOnCompliance(unittest.TestCase):
         assert_successful_evaluation(self, response, resp_expected, 3)
 
     valid_whitelist_ip = '{"WhitelistedIPs":"10.1.1.1,10.1.2.0/24"}'
-
+    
     get_rest_with_apis_policy_match_whitelist = {
         'items': [{'name': 'name-api-1-match-whitelist-address',
-                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.1\\\"]}}}]}',
+                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.1\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}},
                     {'name': 'name-api-2-match-whitelist-network',
-                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.2.0\\/24\\\"]}}}]}',
+                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.2.0\\/24\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}}
                    ]
     }
@@ -159,15 +159,15 @@ class TestsOnCompliance(unittest.TestCase):
         resp_expected.append(build_expected_response('COMPLIANT', 'name-api-1-match-whitelist-address'))
         resp_expected.append(build_expected_response('COMPLIANT', 'name-api-2-match-whitelist-network'))
         assert_successful_evaluation(self, response, resp_expected, 2)
-
+    
     valid_whitelist_ip_more = '{"WhitelistedIPs":"10.1.1.0/24,10.1.2.0/28"}'
-
+    
     get_rest_with_apis_policy_dont_match_whitelist_compliant = {
         'items': [{'name': 'name-api-1-no-match-address',
-                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.10\\\"]}}}]}',
+                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.10\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}},
                     {'name': 'name-api-2-no-match-network',
-                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.2.4\\/30\\\"]}}}]}',
+                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.2.4\\/30\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}}
                    ]
     }
@@ -178,13 +178,13 @@ class TestsOnCompliance(unittest.TestCase):
         resp_expected.append(build_expected_response('COMPLIANT', 'name-api-1-no-match-address'))
         resp_expected.append(build_expected_response('COMPLIANT', 'name-api-2-no-match-network'))
         assert_successful_evaluation(self, response, resp_expected, 2)
-
+    
     get_rest_with_apis_policy_dont_match_whitelist_non_compliant = {
         'items': [{'name': 'name-api-1-no-match-address',
-                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":\\\"10.1.3.2\\\"}}}]}',
+                   'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":\\\"10.1.3.2\\\"}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}},
                     {'name': 'name-api-2-no-match-network',
-                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.2\\\",\\\"10.1.3.2\\\","10.1.2.0\\/27\\\"]}}}]}',
+                    'policy': '{\\\"Version\\\":\\\"2012-10-17\\\",\\\"Statement\\\":[{\\\"Effect\\\":\\\"Allow\\\",\\\"Principal\\\":\\\"*\\\",\\\"Action\\\":\\\"execute-api:Invoke\\\",\\\"Resource\\\":\\\"arn:aws:execute-api:us-east-1:112233445566:4fzg4h5rf2\\/*\\\",\\\"Condition\\\":{\\\"IpAddress\\\":{\\\"aws:SourceIp\\\":[\\\"10.1.1.2\\\",\\\"10.1.3.2\\\","10.1.2.0\\/27\\\"]}}}]}', 
                    'endpointConfiguration': {'types': ['EDGE']}}
                    ]
     }
@@ -195,8 +195,8 @@ class TestsOnCompliance(unittest.TestCase):
         resp_expected.append(build_expected_response('NON_COMPLIANT', 'name-api-1-no-match-address', annotation='The attached policy allows more than the whitelist.'))
         resp_expected.append(build_expected_response('NON_COMPLIANT', 'name-api-2-no-match-network', annotation='The attached policy allows more than the whitelist.'))
         assert_successful_evaluation(self, response, resp_expected, 2)
-
-
+    
+    
 
 ####################
 # Helper Functions #

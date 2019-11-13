@@ -27,7 +27,7 @@ Parameters:
   | ------------------- | --------- | --------------------------------------------- |-------------------------|
   | WhitelistedIPs      | Mandatory | IP addresses whitelisted to invoke the rest   | Seperated by comma (,)  |
   |                     |           | API.                                          |                         |
-  |---------------------|-----------|-----------------------------------------------|-------------------------|
+  |---------------------|-----------|-----------------------------------------------|-------------------------| 
 
 Feature:
     In order to: to limit the access to API
@@ -51,7 +51,7 @@ Scenarios:
 	  Given: WhitelistedIPs parameter is defined and valid
         And: APIs do not have resource policy attached
 	   Then: return NON_COMPLIANT
-
+    
     Scenario 4:
 	  Given: WhitelistedIPs parameter is defined and valid
         And: APIs have resource policy attached
@@ -61,10 +61,10 @@ Scenarios:
 	Scenario 5:
 	  Given: WhitelistedIPs parameter is defined and valid
         And: APIs have resource policy attached
-	    And: The Resource policy does not contain <Options of Policy>
+	    And: The Resource policy does not contain <Options of Policy> 
 	   Then: return NON_COMPLIANT
 
-    With:
+    With:    
         | Options of Policy                                      |
         | any 'Condition'                                        |
         | any 'Condition' about 'IpAddress'                      |
@@ -108,18 +108,18 @@ ASSUME_ROLE_MODE = False
 
 def evaluate_compliance(event, configuration_item, rule_parameters):
     """Form the evaluation(s) to be return to Config Rules
-
-    Return either:
+    
+    Return either: 
     None -- when no result needs to be displayed
     a string -- either COMPLIANT, NON_COMPLIANT or NOT_APPLICABLE
     a dictionary -- the evaluation dictionary, usually built by build_evaluation_from_config_item()
     a list of dictionary -- a list of evaluation dictionary , usually built by build_evaluation()
-
+    
     Keyword arguments:
     event -- the event variable given in the lambda handler
     configuration_item -- the configurationItem dictionary in the invokingEvent
     rule_parameters -- the Key/Value dictionary of the Config Rules parameters
-
+    
     Advanced Notes:
     1 -- the deleted resources are taken care of by the Boilerplate code
     2 -- if a list of dictionary is returned, the old evaluation(s) which are not returned in the new evaluation list are returned as NOT_APPLICABLE by the Boilerplate code
@@ -128,28 +128,28 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
 
     apigw_client = get_client('apigateway', event)
     gateways_list = get_all_api_gateway(apigw_client)
-
+    
     if not gateways_list:
         return None
-
+    
     evaluations = []
     for gateway in gateways_list:
 
         if gateway['endpointConfiguration']['types'] == ['PRIVATE']:
             evaluations.append(build_evaluation(gateway['name'], 'NOT_APPLICABLE', event))
             continue
-
-
+        
+        
         if 'policy' not in gateway:
             evaluations.append(build_evaluation(gateway['name'], 'NON_COMPLIANT', event, annotation='No resource policy is attached.'))
             continue
 
         policy = json.loads(gateway['policy'].replace('\\',''))
-
+        
         if is_policy_allows_more_than_whitelist(policy, rule_parameters):
             evaluations.append(build_evaluation(gateway['name'], 'NON_COMPLIANT', event, annotation='The attached policy allows more than the whitelist.'))
             continue
-
+        
         evaluations.append(build_evaluation(gateway['name'], 'COMPLIANT', event))
 
     return evaluations
@@ -158,16 +158,16 @@ def is_policy_allows_more_than_whitelist(policy, whitelist):
     for statement in policy['Statement']:
         if statement['Effect'] != 'Allow':
             continue
-
+        
         if 'Condition' not in statement:
             return True
-
+        
         if 'IpAddress' not in statement['Condition']:
             return True
 
         if 'aws:SourceIp' not in statement['Condition']['IpAddress']:
             return True
-
+      
         if not is_ip_in_whitelist(statement['Condition']['IpAddress']['aws:SourceIp'], whitelist):
             return True
 
@@ -177,7 +177,7 @@ def is_ip_in_whitelist(ip_list_or_str, whitelist):
 
     all_network_in_ip_list = get_all_ip_networks(ip_list_or_str)
     all_network_in_whitelist = get_all_ip_networks(whitelist)
-
+    
     for net in all_network_in_ip_list:
         is_network_included = False
         for net_whitelisted in  all_network_in_whitelist:
@@ -190,7 +190,7 @@ def is_ip_in_whitelist(ip_list_or_str, whitelist):
             return False
     return True
 
-def get_all_ip_networks(ip_list_or_str):
+def get_all_ip_networks(ip_list_or_str):                
     ip_network_to_return = []
     if isinstance(ip_list_or_str, str):
         ip_network_to_return.append(ipaddress.ip_network(ip_list_or_str, strict=False))
@@ -200,7 +200,7 @@ def get_all_ip_networks(ip_list_or_str):
     else:
         raise ValueError("Unexpected value in the aws:SourceIp field of the policy.")
     return ip_network_to_return
-
+        
 def get_all_api_gateway(client):
     rest_apis_list = client.get_rest_apis(limit=500)
     apis_list = []

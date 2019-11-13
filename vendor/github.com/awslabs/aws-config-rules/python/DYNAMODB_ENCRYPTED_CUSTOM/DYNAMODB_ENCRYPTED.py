@@ -126,7 +126,7 @@ def evaluate_compliance(event, configuration_item, valid_rule_parameters):
             return build_evaluation_from_config_item(configuration_item, 'COMPLIANT')
     except Exception as e:
         pass
-
+    
     return build_evaluation_from_config_item(
         configuration_item,
         'NON_COMPLIANT',

@@ -43,7 +43,7 @@ class TestParameter(unittest.TestCase):
     rule_parameters_empty = '{}'
     rule_parameters_one = '{"ValidPolicies":"Some_policy_1"}'
     rule_parameters_two = '{"ValidPolicies":"Some_policy_1, Some_policy_2"}'
-
+    
     def test_validpolicy_mandatory_parameter(self):
         rule.ASSUME_ROLE_MODE = False
         response = rule.lambda_handler(build_lambda_scheduled_event(), {})

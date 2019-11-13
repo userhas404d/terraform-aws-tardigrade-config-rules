@@ -91,10 +91,10 @@ class test_compliance(unittest.TestCase):
     user_list_empty = {"Users" : []}
     user_list_whitelist = {"Users": [{'UserId': 'AIDAJYPPIFB65RV8YYLDU','UserName': 'sampleUser1'}]}
     user_list = {"Users": [{'UserId': 'AIDAJYPPIFB65RV8YYLDU','UserName': 'sampleUser1'}, {'UserId': 'AIDAJYPPIFB65RV8YYLDV','UserName': 'sampleUser2'}]}
-
+    
     no_access_key = {'AccessKeyMetadata': []}
     no_access_key_active = {'AccessKeyMetadata': [{'AccessKeyId': 'AKIAIPPNIMKJA2N7SJRA', 'Status': 'Inactive', 'UserName': 'sampleUser'}]}
-
+    
     def construct_list_access_keys_response(self, age_key):
         list_access_keys_call = {}
         list_access_keys_call = {'AccessKeyMetadata': [{'AccessKeyId': 'AKIAIPPNIMKJA2N7SJRA',

@@ -44,7 +44,7 @@ Scenarios:
      Then: Return NON_COMPLIANT
 
   Scenario: 4
-    Given: At least one <Policy> statement of Lambda Role has Action as "*"
+    Given: At least one <Policy> statement of Lambda Role has Action as "*" 
       And: The resource-level condition is either * or arn:aws:logs:*
      Then: Return COMPLIANT
 
@@ -54,7 +54,7 @@ Scenarios:
      Then: Return COMPLIANT
 
   Scenario: 6
-    Given: At least one <Policy> statement of Lambda Role has Action as "logs:CreateLogGroup", "logs:CreateLogStream" and "logs:PutLogEvents"
+    Given: At least one <Policy> statement of Lambda Role has Action as "logs:CreateLogGroup", "logs:CreateLogStream" and "logs:PutLogEvents" 
       And: The resource-level condition is either * or arn:aws:logs:*
      Then: Return COMPLIANT
 
@@ -162,7 +162,7 @@ def are_statements_allow_logging(statements):
                 is_createlogstream_present = True
             elif statement['Action'] == "logs:PutLogEvents":
                 is_putlogevents_present = True
-
+    
     return is_createloggroup_present and is_createlogstream_present and is_putlogevents_present
 
 def is_effect_allow(statement):

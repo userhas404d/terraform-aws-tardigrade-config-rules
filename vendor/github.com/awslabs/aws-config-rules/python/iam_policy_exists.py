@@ -16,7 +16,7 @@ import json
 def evaluate_compliance(rule_parameters, account_id):
 	fails = 0
 	client = boto3.client("iam")
-
+	
 	if 'PoliciesToCheck' in rule_parameters:
 		for policy in rule_parameters["PoliciesToCheck"].split(","):
 			policyARN = "arn:aws:iam::%s:policy/%s" %(account_id, policy)

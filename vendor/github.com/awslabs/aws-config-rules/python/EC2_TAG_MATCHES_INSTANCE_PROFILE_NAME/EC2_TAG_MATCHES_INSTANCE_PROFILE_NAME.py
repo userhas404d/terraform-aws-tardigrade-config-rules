@@ -47,7 +47,7 @@ Scenarios:
       And: This EC2 instance has an instance profile.
       And: This instance profile name does not include NAME_ROLE_MUST_INCLUDE
      Then: Return NOT_APPLICABLE
-
+  
   Scenario 4:
     Given: An EC2 instance has a tag with the tag key equals to TAG_KEY.
       And: The tag value does not include TAG_VALUE_MUST_INCLUDE.
@@ -126,7 +126,7 @@ def evaluate_compliance(event, configuration_item, valid_rule_parameters):
     is_tag_value_include = False
     if tag_value.find(TAG_VALUE_MUST_INCLUDE) >= 0:
         is_tag_value_include = True
-
+    
     # Scenario 2 : EC2 instance does not have TAG_VALUE_MUST_INCLUDE in tag value and has no instance profile.
     if not is_tag_value_include and not configuration_item["configuration"]['iamInstanceProfile']:
         return 'NOT_APPLICABLE'

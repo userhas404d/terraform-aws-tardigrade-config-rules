@@ -12,13 +12,13 @@
 Rule Name:
     vpc-flow-logs-enabled
 
-Description:
+Description: 
     Check whether VPCs have Flow Logs enabled.
 
-Trigger:
+Trigger: 
     Periodic
 
-Reports on:
+Reports on: 
     AWS::EC2::VPC
 
 Rule Parameters:
@@ -61,7 +61,7 @@ Scenarios:
     Given: The parameter WhiteListedVPC is neither configured nor matching the VPC
       And: The VPC have no Flow Logs associated with a SUCCESS deliver-log-status
      Then: Return NON_COMPLIANT
-
+  
   Scenario 5:
     Given: The parameter WhiteListedVPC is neither configured nor matching the VPC
       And: The parameter TrafficType is not configured
@@ -73,16 +73,16 @@ Scenarios:
     Given: The parameter WhiteListedVPC is neither configured nor matching the VPC
       And: The parameter TrafficType is not configured
       And: The parameter LogGroupName is not configured
-      And: The VPC has a Flow Logs associated with TrafficType set to ALL
+      And: The VPC has a Flow Logs associated with TrafficType set to ALL 
      Then: Return COMPLIANT
-
+  
   Scenario 7:
     Given: The parameter WhiteListedVPC is neither configured nor matching the VPC
       And: The parameter TrafficType is not configured
       And: The parameter LogGroupName is configured and valid
       And: The VPC has no Flow Logs associated with TrafficType set to ALL and the LogGroupName matches the parameter LogGroupName
      Then: Return NON_COMPLIANT
-
+  
   Scenario 8:
     Given: The parameter WhiteListedVPC is neither configured nor matching the VPC
       And: The parameter TrafficType is not configured
@@ -154,7 +154,7 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
     """
 
     evaluations = []
-
+    
     ec2_client = get_client('ec2', event)
     vpc_id_list = get_all_vpc_id(ec2_client)
     vpc_flow_log_list = get_all_flow_logs(ec2_client, vpc_id_list)
@@ -173,18 +173,18 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
 
         for vpc_flow_log in vpc_flow_log_list:
             if vpc_flow_log['ResourceId'] != vpc_id:
-                continue
+                continue    
             flow_log_exist = True
-
+            
             if vpc_flow_log['TrafficType'] != rule_parameters['TrafficType']:
                 continue
             traffic_type_matched = True
-
+        
             if rule_parameters['LogGroupName']:
                 if rule_parameters['LogGroupName'] != vpc_flow_log['LogGroupName']:
                     continue
             log_group_correct = True
-
+            
             if 'DeliverLogsErrorMessage' in vpc_flow_log:
                 delivery_error_msg = vpc_flow_log['DeliverLogsErrorMessage']
                 continue
@@ -201,7 +201,7 @@ def evaluate_compliance(event, configuration_item, rule_parameters):
         if not log_group_correct:
             evaluations.append(build_evaluation(vpc_id, 'NON_COMPLIANT', event, annotation='No flow log matches with the log group name {0}.'.format(rule_parameters['LogGroupName'])))
             continue
-
+        
         if not flow_log_no_error:
             evaluations.append(build_evaluation(vpc_id, 'NON_COMPLIANT', event, annotation='The following error occured in the flow log delivery: {0}.'.format(delivery_error_msg)))
             continue
@@ -226,7 +226,7 @@ def get_all_vpc_id(ec2_client):
     vpc_id_list = []
     for vpc in vpc_list:
         vpc_id_list.append(vpc['VpcId'])
-    return vpc_id_list
+    return vpc_id_list    
 
 def evaluate_parameters(rule_parameters):
     """Evaluate the rule parameters dictionary validity. Raise a ValueError for invalid parameters.
@@ -255,7 +255,7 @@ def evaluate_parameters(rule_parameters):
     validated_rule_parameters['TrafficType'] = 'ALL'
     if 'TrafficType' in rule_parameters:
         if rule_parameters['TrafficType'] not in ['ACCEPT', 'REJECT', 'ALL']:
-            raise ValueError('The parameter "TrafficType" must be ALL, ACCEPT or REJECT.')
+            raise ValueError('The parameter "TrafficType" must be ALL, ACCEPT or REJECT.')  
         validated_rule_parameters['TrafficType'] = rule_parameters['TrafficType']
 
     validated_rule_parameters['LogGroupName'] = None

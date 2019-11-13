@@ -90,7 +90,7 @@ def evaluate_compliance(event, configuration_item, valid_rule_parameters):
     user_list = get_all_users(iam_client)
     for user in user_list:
         if user['UserId'] not in valid_rule_parameters:
-            return build_evaluation(event['accountId'], 'NON_COMPLIANT', event, annotation='The user ({}) with id ({}) is not in the whitelist.'.format(user['UserName'], user['UserId']))
+            return build_evaluation(event['accountId'], 'NON_COMPLIANT', event, annotation='The user ({}) with id ({}) is not in the whitelist.'.format(user['UserName'], user['UserId']))    
     return 'COMPLIANT'
 
 def evaluate_parameters(rule_parameters):

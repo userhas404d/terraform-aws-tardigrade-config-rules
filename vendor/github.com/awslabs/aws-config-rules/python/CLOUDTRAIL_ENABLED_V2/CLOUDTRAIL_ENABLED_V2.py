@@ -142,7 +142,7 @@ Scenarios:
   Scenario 15:
     Given: at least 1 CloudTrail trail is enabled
       And: at least 1 of those CloudTrail trail has all configurations aligned with parameters
-     Then: return COMPLIANT
+     Then: return COMPLIANT 
 '''
 
 import json
@@ -209,9 +209,9 @@ def evaluate_compliance(event, configuration_item, valid_rule_parameters):
         try:
             trail_status = ct_client.get_trail_status(Name=trail['Name'])
         except:
-            continue
+            continue        
         if not trail_status['IsLogging']:
-            continue
+            continue        
         if 'LatestDeliveryError' in trail_status:
             continue
         if valid_rule_parameters['ManagementEventBoolean'] or valid_rule_parameters['S3DataEventBoolean'] or valid_rule_parameters['LambdaEventBoolean']:
@@ -266,7 +266,7 @@ def evaluate_parameters(rule_parameters):
                 valid_rule_parameters[bool_param] = False
             continue
         valid_rule_parameters[bool_param] = False
-
+    
     if 'S3BucketName' not in rule_parameters:
         valid_rule_parameters['S3BucketName'] = ''
     else:
