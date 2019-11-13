@@ -244,6 +244,26 @@ resource "aws_config_config_rule" "root_account_mfa_enabled" {
   depends_on = [null_resource.dependencies]
 }
 
+resource "aws_config_config_rule" "iam_user_active" {
+  count = var.create_config_rules && ! local.exclude_iam_user_active ? 1 : 0
+
+  name        = "iam-user-active"
+  description = "Checks whether your AWS Identity and Access Management (IAM) users have passwords or active access keys that have not been used within the specified number of days you provided"
+
+  input_parameters = <<-EOF
+    {
+      "maxCredentialUsageAge":"90"
+    }
+  EOF
+
+  source {
+    owner             = "AWS"
+    source_identifier = "IAM_USER_UNUSED_CREDENTIALS_CHECK"
+  }
+
+  depends_on = [null_resource.dependencies]
+}
+
 ###########################
 ### CUSTOM CONFIG RULES ###
 ###########################
@@ -390,84 +410,6 @@ resource "aws_config_config_rule" "rds_vpc_public_subnet" {
 
   depends_on = [
     aws_lambda_permission.rds_vpc_public_subnet,
-    null_resource.dependencies,
-  ]
-}
-
-### iam_user_active
-data "aws_iam_policy_document" "lambda_iam_user_active" {
-  count = var.create_config_rules && ! local.exclude_iam_user_active ? 1 : 0
-
-  source_json = data.aws_iam_policy.config_rules[0].policy
-
-  statement {
-    actions = [
-      "iam:GetUser",
-      "iam:ListAccessKeys",
-      "iam:GetAccessKeyLastUsed",
-    ]
-
-    resources = ["*"]
-  }
-}
-
-module "lambda_iam_user_active" {
-  source = "git::https://github.com/plus3it/terraform-aws-lambda.git?ref=v1.1.0"
-
-  function_name = "config_rule_iam_user_active"
-  description   = "Checks if IAM users are active"
-  handler       = "IAM_USER_USED_LAST_90_DAYS.lambda_handler"
-  runtime       = "python3.6"
-  timeout       = 15
-  tags          = var.tags
-
-  reserved_concurrent_executions = "-1"
-
-  source_path = "${local.aws_config_rules}/python/IAM_USER_USED_LAST_90_DAYS/IAM_USER_USED_LAST_90_DAYS.py"
-
-  policy = var.create_config_rules ? data.aws_iam_policy_document.lambda_iam_user_active[0] : null
-}
-
-resource "aws_lambda_permission" "iam_user_active" {
-  count = var.create_config_rules && ! local.exclude_iam_user_active ? 1 : 0
-
-  action         = "lambda:InvokeFunction"
-  function_name  = module.lambda_iam_user_active.function_name
-  principal      = "config.amazonaws.com"
-  source_account = data.aws_caller_identity.this[0].account_id
-}
-
-resource "aws_config_config_rule" "iam_user_active" {
-  count = var.create_config_rules && ! local.exclude_iam_user_active ? 1 : 0
-
-  name        = "iam-user-active"
-  description = "Checks if IAM users are active"
-
-  input_parameters = <<-EOF
-    {
-      "NotUsedTimeOutInDays": "90"
-    }
-  EOF
-
-  scope {
-    compliance_resource_types = ["AWS::IAM::User"]
-  }
-
-  source {
-    owner             = "CUSTOM_LAMBDA"
-    source_identifier = module.lambda_iam_user_active.function_arn
-
-    source_detail {
-      message_type = "ConfigurationItemChangeNotification"
-    }
-
-    source_detail {
-      message_type = "OversizedConfigurationItemChangeNotification"
-    }
-  }
-
-  depends_on = [
-    aws_lambda_permission.iam_user_active,
     null_resource.dependencies,
   ]
 }
