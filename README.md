@@ -8,15 +8,30 @@ Terraform module to setup config rules
 make clean && make vendor
 ```
 
+
+<!-- BEGIN TFDOCS -->
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+| null | n/a |
+| template | n/a |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| cloudtrail\_bucket | Name of S3 bucket to validate that CloudTrail logs are being delivered | string | `"null"` | no |
-| config\_bucket | Name of S3 bucket to validate that Config is configured to send inventory to | string | `"null"` | no |
-| config\_recorder | The name of the AWS Config recorder | string | `"null"` | no |
-| config\_sns\_topic\_arn | ARN of SNS topic to validate that Config changes are being streamed to | string | `"null"` | no |
-| create\_config\_rules | Controls whether to create the AWS Config Rules | bool | `"true"` | no |
-| exclude\_rules | List of config rule resource names to exclude from creation | list(string) | `<list>` | no |
-| tags | Map of tags to apply to the resources | map(string) | `<map>` | no |
+|------|-------------|------|---------|:-----:|
+| cloudtrail\_bucket | Name of S3 bucket to validate that CloudTrail logs are being delivered | `string` | n/a | yes |
+| config\_bucket | Name of S3 bucket to validate that Config is configured to send inventory to | `string` | n/a | yes |
+| config\_recorder | The name of the AWS Config recorder | `string` | n/a | yes |
+| config\_sns\_topic\_arn | ARN of SNS topic to validate that Config changes are being streamed to | `string` | n/a | yes |
+| create\_config\_rules | Controls whether to create the AWS Config Rules | `bool` | `true` | no |
+| exclude\_rules | List of config rule resource names to exclude from creation | `list(string)` | `[]` | no |
+| tags | Map of tags to apply to the resources | `map(string)` | `{}` | no |
 
+## Outputs
+
+No output.
+
+<!-- END TFDOCS -->
